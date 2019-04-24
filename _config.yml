@@ -1,9 +1,12 @@
-title: Brume
-author: Aigars Dzerviniks
-description: It's simple. It's easy to use. It's a Jekyll theme.
+title: Gunflake's IT blog
+author: Vincent Nam
+description: I do walk Until success.
 
-highlighter: null
+
+markdown: kramdown
+highlighter : rouge
 permalink: /:title
+
 
 url:
 baseurl:

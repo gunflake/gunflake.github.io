@@ -3,7 +3,7 @@ layout: post
 title: Best Sightseeing Pair
 ---
 
-#Leetcode Algorithm
+# Leetcode Algorithm
 
 ## Contest 129 - Best Sightseeing Pair (1014)
 
