@@ -38,7 +38,7 @@
 ### DDL
 1. 테이블 생성
     
-    ```
+    ```sql
     Create Table DEPT
     (
         detpno varchar2(4) primary key,
@@ -46,7 +46,7 @@
     );
     ```
 
-    ```
+    ```sql
     Create Table EMP
     (
         empno      number(10) primary key,
@@ -73,7 +73,7 @@
 
     1. 컬럼 추가
         
-        ```
+        ```sql
         ALTER TABLE EMP
         ADD (age number(2) default 1);
         ```
@@ -82,7 +82,7 @@
 
     2. 컬럼 변경
 
-        ```
+        ```sql
         ALTER TABLE EMP
         MODIFY(ename varchar2(40) not null);
         ```
@@ -92,7 +92,7 @@
 
     3. 컬럼 삭제
 
-        ```
+        ```sql
         ALTER TABLE EMP
         DROP COULUMN age;
         ```
@@ -101,7 +101,7 @@
 
     4. 컬럼명 변경
 
-        ```
+        ```sql
         ALTER TABLE EMP
         RENAME COLUMN ename to new_ename;
         ```
@@ -110,7 +110,7 @@
 
 3. 테이블 삭제
 
-    ```
+    ```sql
     DROP TABLE EMP;
     DROP TABLE EMP CASCADE CONSTRAINT;
     ```
@@ -135,7 +135,7 @@
 
     - SQL 구문
 
-        ```
+        ```sql
         CREATE VIEW T_EMP AS
          SELECT * FROM EMP;
         ```
@@ -159,7 +159,7 @@
     
     - SELECT 문으로 입력
         
-        ```
+        ```sql
         INSERT INTO DEPT_TEST
         SELECT * FROM DEPT;
         ```
@@ -168,7 +168,7 @@
     
     - Nologging 사용
 
-        ```
+        ```sql
         ALTER TABLE DEPT NOLOGGING;
         ```
 
@@ -191,7 +191,7 @@
 
     - 조회 데이터 결합 
 
-        ```
+        ```sql
         SELECT ENAME || '님' FROM EMP;
         ```
 
@@ -202,7 +202,7 @@
         - 정렬을 하기 때문에 데이터베이스 메모리를 많이 사용하게 된다. 즉, 대량의 데이터를 정렬하게 되면 정렬로 인한 성능저하가 발생한다.
         - ORACLE 데이터베이스는 정렬을 위해서 메모리 내부에 할당된 SORT_AREA_SIZE를 사용한다. 만약 SORT_AREA_SIZE가 너무 작으면 성능저하가 발생한다.
         
-        ```
+        ```sql
         SELECT * FROM EMP
             ORDER BY ENAME, SAL DESC;
         ```
@@ -210,7 +210,7 @@
         - ENAME으로 오름차순 정렬하고 SAL로 내림차순 정렬한다.
         - 정렬을 회피하기 위해서 인덱스를 생성할 때 사용자가 원하는 형태로 오름차순 혹은 내림차순으로 생성해야 한다.
 
-        ```
+        ```sql
         SELECT /*+ INDEX_DESC(A) */ * 
         FROM EMP A;
         ```
@@ -239,7 +239,7 @@
     - Like문 사용
         - `_`는 한 개의 단일 문자를 의미한다.
 
-            ```
+            ```sql
             SELECT * FROM EMP
             WHERE ENAME LIKE 'test_';
             ```
@@ -272,7 +272,7 @@
     2. HAVING 문 사용
         - GROUP BY에 조건을 사용하려면 HAVING을 사용해야 한다. 만약 WHERE절에 조건문을 사용하게 되면 GROUP BY 대상에서 제외된다.
 
-            ```
+            ```sql
             SELECT DEPTNO, SUM(SAL)
             FROM EMP
             GROUP BY DEPTNO
@@ -299,7 +299,7 @@
 
     - 부서별(DEPTNO), 관리자별(MGR) 급여 평균 계산
     
-        ```
+        ```sql
         SELECT DEPTNO, MGR, AVG(SAL)
         FROM EMP
         GROUP BY DEPTNO, MGR;
@@ -307,7 +307,7 @@
 
     - 직업(JOB)별 급여 합계 중에 급여 합계가 1000 이상인 직원
 
-        ```
+        ```sql
         SELECT JOB, SUM(SAL)
         FROM EMP
         GROUP BY JOB
@@ -316,7 +316,7 @@
 
     - 사원번호 1000~1003번의 부서별 급여 합계
 
-        ```
+        ```sql
         SELECT DEPTNO, SUM(SAL)
         FROM EMP
         WHERE EMPNO BETWEEN 1000 AND 1003
