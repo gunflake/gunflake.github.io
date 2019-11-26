@@ -413,9 +413,9 @@
         WHERE ROWNUM <= 1
         ```
 
-            | EMPNO | ENAME | JOB | SAL |
-            | --- | --- | --- | --- |
-            | 1000 | test1 | clerk | 800 |
+        | EMPNO | ENAME | JOB | SAL |
+        | --- | --- | --- | --- |
+        | 1000 | test1 | clerk | 800 |
 
         ```SQL
         SELECT *
@@ -423,13 +423,13 @@
         WHERE list <= 5
         ```
 
-            | LIST | ENAME |
-            | --- | --- | 
-            | 1 | test1 |
-            | 2 | test2 |
-            | 3 | test3 |
-            | 4 | test4 |
-            | 5 | test5 |
+        | LIST | ENAME |
+        | --- | --- | 
+        | 1 | test1 |
+        | 2 | test2 |
+        | 3 | test3 |
+        | 4 | test4 |
+        | 5 | test5 |
 
         - 위와 같이 5건의 행을 조회하기 위해서는 인라인 뷰를 사용하고 ROWNUM에 별칭을 사용해야  한다.
 
