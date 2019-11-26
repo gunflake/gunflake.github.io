@@ -4,6 +4,8 @@
 - [관계형 데이터베이스](#관계형-데이터베이스)
 - [DDL](#DDL)
 - [DML](#DML)
+- [DCL](#DCL)
+- [TCL](#TCL)
 
 ### 관계형 데이터베이스
 1. 특징
@@ -340,3 +342,196 @@
     
     - 암시적 형변환은 개발자가 하지 않은 경우 DBMS가 자동으로 형변환하는 것을 의미한다.
 
+9. 내장형 함수(Build-In Function)
+    > 모든 데이터베이스는 SQL에서 사용할 수 있는 내장형 함수를 가지고 있다.
+    
+    - 문자형 함수
+
+        | 문자형 함수 | 설명 |
+        | -------- | --- |
+        | ASCII(문자) | 문자 혹은 숫자를 ASCII 코드 값으로 변환한다. |
+        | CHAR(ASCII 코드 값) | ASCII 코드 값을 문자로 변환한다. |
+        | SUBSTR(문자열, m, n) | 문자열에서 m번째 위치부터 n개를 자른다. |
+        | CONCAT(문자열1, 문자열2) | - 문자열1번과 문자열2번을 결합한다. |
+        | LOWER(문자열) | 영문자를 소문자로 변환한다. |
+        | UPPER(문자열) | 영문자를 대문자로 변환한다. |
+        | LENGTH or LEN (문자열) | 공백을 포함해서 문자열의 길이를 알려준다. |
+        | LTRIM(문자열, 지정문자) <br> RTRIM(문자열, 지정문자) | - 왼쪽 or 오른쪽에     지정된 문자를 삭제한다. <br> - 지정된 문자를 생략하면 공백을 삭제한다. |
+        | TRIM(문자열, 지정된 문자) | - 왼쪽 및 오른쪽에 지정된 문자를 삭제한다. <br> -     지정된 문자를 생략하면 공백을 삭제한다. |
+
+    - **SYSDATE** : 오늘 날짜를 구하는 함수
+    - **EXTRACT** : 해당 년/월/일 만 알고 싶을때 사용 함수
+
+    ```SQL
+    SELECT SYSDATE,
+           EXTRACT(YEAR From SYSDATE) AS ExtractYear, 
+           TO_CHAR(SYSDATE, 'YYYYMMDD') AS TOCHAR
+           FROM DUAL;
+    ```
+
+    - 결과
+        
+        | SYSDATE | ExtractYear | TOCHAR |
+        | ------- | ----------- | ------ |
+        | 19/11/26 | 2019 | 20191126 |
+
+    - **숫자형 함수**
+
+        | 숫자형 함수 | 설명 |
+        | -------- | --- |
+        | ABS(숫자) | 절대값을 돌려준다. |
+        | SIGN(숫자) | 양수, 음수, 0을 구별한다. |
+        | MOD(숫자1, 숫자2) | 숫자1을 숫자2로 나누어 나머지를 계산한다. |
+        | CEIL/CEILING(숫자) | 숫자보다 크거나 같은 최소의 정수를 돌려준다. |
+        | FLOOR(숫자) | 숫자보다 작거나 같은 최대의 정수를 돌려준다. |
+        | ROUND(숫자, m) | 소수점 m자리에서 반올림한다. |
+        | TRUNC(숫자, m) | 소수점 m자리에서 절삭한다. |
+
+10. DECODE와 CASE문
+
+    - DECODE문으로 IF문을 구현할 수 있다. 특정 조건이 참이면 A, 거짓이면 B로 응답한다.
+
+    ```SQL
+    DECODE(EMPNO, 1000, 'TRUE', 'FALSE')
+    ```
+
+    - EMPNO = 1000 이면 TRUE, 아니면 FALSE 응답
+
+    -CASE
+        - IF~THEN ~ ELSE ~ END 구조
+
+11. ROWNUM과 ROWID
+
+    1. ROWNUM
+
+        - ROWNUM은 SELECT문의 결과에 대해서 논리적인 일련번호를 부여한다.
+        - ROWNUM은 조회되는 행 수를 제한할 때 많이 사용된다.
+        - ROWNUM을 사용해서 한 개의 행을 가지고 올 수 있으나, 여러 개의 행을 가지고 올 때는     인라인 뷰(Inline view)를 사용해야 한다.
+
+        ```SQL
+        SELECT * FROM EMP
+        WHERE ROWNUM <= 1
+        ```
+
+            | EMPNO | ENAME | JOB | SAL |
+            | --- | --- | --- | --- |
+            | 1000 | test1 | clerk | 800 |
+
+        ```SQL
+        SELECT *
+        FROM (SELECT ROWNUM list, ENAME FROM EMP)
+        WHERE list <= 5
+        ```
+
+            | LIST | ENAME |
+            | --- | --- | 
+            | 1 | test1 |
+            | 2 | test2 |
+            | 3 | test3 |
+            | 4 | test4 |
+            | 5 | test5 |
+
+        - 위와 같이 5건의 행을 조회하기 위해서는 인라인 뷰를 사용하고 ROWNUM에 별칭을 사용해야  한다.
+
+    2. ROWID
+
+        - ORACLE 데이터베이스 내에서 데이터를 구분할 수 있는 유일한 값이다.
+        - 데이터가 어떤 데이터 파일, 어떤 블록에 저장되어 있는지를 알 수 있다.
+        - 구조
+
+            | 구조 | 길이 | 설명 |
+            | --- | --- | --- |
+            | 오브젝트 번호 | 1~6 | 오브젝트 별로 유일한 값을 가지고 있으며, 해당 오브젝트가 속해 있는 값이다. |
+            | 상대 파일번호 | 7~9 | 테이블스페이스에 속해 있는 데이터 파일에 대한 상대 파일번호이다. |
+            | 블록번호 | 10~15 | 데이터 파일 내부에서 어느 블록에 데이터가 있는지 알려준다. |
+            | 데이터번호 | 16~18 | 데이터 블록에 데이터가 저장되어 있는 순서를 의미한다. |
+
+12. WITH 구문
+
+    - 서브쿼리를 사용해서 임시 테이블이나 뷰처럼 사용할 수 잇는 구문이다.
+    - 서브쿼리 블록에 별칭을 지정할 수 있다.
+    - 옵티마이저는 SQL을 인라인 뷰나 임시 테이블로 판단한다.
+
+    ```SQL
+    WITH viewData AS
+    (SELECT * FROM EMP
+        UNION ALL
+    SELECT * FROM EMP)
+    # SubQuery를 사용해서 임시 테이블을 만들고 viewData라는 별명을 만든다.
+    SELECT * FROM viewData WHERE EMPNO=1000
+    # 임시 테이블을 이용해 데이터를 조회한다.
+    ```
+
+### DCL
+
+1. GRANT
+    - GRANT문은 데이터베이스 사용자에게 권한을 부여한다.
+    - 데이터베이스 사용을 위해서는 권한이 있어서 연결, 입력, 수정, 삭제, 조회를 할 수 있다.
+        
+        ```SQL
+        GRANT privileges ON object TO user
+        # privileges는 구너한을 의미하며, object는 테이블명이다.
+        # user는 Oracle 데이터베이스 사용자를 지정하면 된다.
+        ```
+
+    - Privileges(권한)
+
+        | 권한 | 설명 |
+        | --- | --- |
+        | SELECT | 지정된 테이블에 대해서 SELECT 권한을 부여한다. |
+        | INSERT | 지정된 테이블에 대해서 INSERT 권한을 부여한다. |
+        | UPDATE | 지정된 테이블에 대해서 UPDATE 권한을 부여한다. |
+        | DELETE | 지정된 테이블에 대해서 DELETE 권한을 부여한다. |
+        | REFERENCES | 지정된 테이블에 참조하는 제약조건을 생성하는 권한을 부여한다. |
+        | ALTER | 지정된 테이블에 대해서 수정할 수 있는 권한을 부여한다. |
+        | INDEX | 지정된 테이블에 대해서 인덱스를 생성할 수 있는 권한을 부여한다. |
+        | ALL | 테이블에 대한 모든 권한을 부여한다. |
+
+        ```SQL
+        GRANT SELECT, INSERT, UPDATE, DELETE
+            ON EMP
+            TO LIMBEST
+        ```
+
+    - WITH GRANT OPTION
+
+        | GRANT 옵션 | 설명 |
+        | --------- | --- |
+        | WITH GRANT OPTION | - 특정 사용자에게 권한을 부여할 수 있는 권한을 부여한다. <br> - 권한을 A 사용자가 B에 부여하고 B가 다시 C를 부여한 후에 권한을 취소(Revoke)하면 모든 권한이 회수된다. |
+        | WITH ADMIN OPTION | - 테이블에 대한 모든 권한을 부여한다. <br> - 권한을 A 사용자가 B에 부여하고 B가 다시 C를 부여한 후에 권한을 취소(Revoke)하면 B 사용자 권한만 취소된다. | 
+
+        ```SQL
+        GRANT SELECT, INSERT, UPDATE, DELETE
+             ON EMP
+             TO LIMBSET WITH GRANT OPTION
+        #권한을 부여할 수 있는 권한을 부여한다.
+        ```
+
+    - REVOKE
+        - 데이터베이스 사용자에게 부여된 권한을 회수한다.
+
+        ```SQL
+        REVOKE privileges ON object From user
+        ```
+
+### TCL
+
+1. COMMIT
+    - INSERT, UPDATE, DELETE문으로 변경한 데이터를 데이터베이스에 반영한다.
+    - 변경 전 이전 데이터는 잃어버린다.
+    - COMMIT이 완료되면 모든 데이터베이스 사용자는 변경된 데이터를 볼 수 있다.
+    - 데이터베이스 변경으로 인한 LOCK이 UNLOCK(해제)된다.
+    - COMMIT이 완료되면 다른 모든 데이터베이스 사용자는 변경된 데이터를 조작할 수 있다.
+    - COMMIT을 실행하면 하나의 트랜잭션 과정을 종료한다.
+    - ORACLE 데이터베이스는 암시적 트랜잭션 관리를 한다. 
+
+2. ROLLBACK
+    - ROLLBACK을 실행하면 데이터에 대한 변경 사용을 모두 취소하고 트랜잭션을 종료한다.
+    - INSERT, UPDATE, DELETE문의 작업을 모두 취소한다. 
+    - ROLLBACK을 실행하면 LOCK이 해제되고 다른 사용자도 데이터베이스 행을 조작할 수 있다.
+
+3. SAVEPOINT(저장점)
+    - SAVEPOINT는 트랜잭션을 작게 분할하여 관리하는 것으로 SAVEPOINT를 사용하면 지정된 위치까지만 트랜잭션을 ROLLBACK 할 수 있다.
+    - SAVEPOINT의 지정은 SAVEPOINT <SAVEPOINT명>을 실행한다.
+    - 저장된 SAVEPOINT까지만 데이터 변경을 취소하고 싶은 경우는 `ROLLBACK TO <SAVEPOINT명>`을 실행한다.
+    - 만약, `ROLLBACK`을 실행하면 SAVEPOINT와 관계없이 변경된 모든 데이터를 취소한다.

@@ -16,7 +16,7 @@ minimal_mistakes_skin    : "contrast" # "air", "aqua", "contrast", "dark", "dirt
 
 # Site Settings
 locale                   : "en-US"
-title                    : "Site Title"
+title                    : "gunflake's blog"
 title_separator          : "-"
 subtitle                 : # site tagline that appears below site title in masthead
 name                     : "Gunflake"
@@ -109,8 +109,8 @@ analytics:
 author:
   name             : "Gunflake"
   avatar           : "/assets/images/avalatte.png" # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
-  bio              : "I am an programmer."
-  location         : "Somewhere"
+  bio              : "I am a programmer."
+  location         : "Seoul"
   email            :
   links:
     - label: "Email"
